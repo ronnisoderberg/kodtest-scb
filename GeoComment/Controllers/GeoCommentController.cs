@@ -1,5 +1,8 @@
 using GeoComment;
+using GeoComment.Data;
+using GeoComment.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace testforwether.Controllers
 {
@@ -7,24 +10,49 @@ namespace testforwether.Controllers
     [Route("api/geo-comments")]
     public class GeoCommentController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
+        private readonly ApplicationDbContext _ctx;
+        public GeoCommentController(ApplicationDbContext ctx)
         {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+            _ctx = ctx;
+        }
 
-        private readonly ILogger<GeoCommentController> _logger;
 
-        public GeoCommentController(ILogger<GeoCommentController> logger)
+        [HttpPost]
+       
+        public async Task<ActionResult> OnPost(Comment input)
         {
-            _logger = logger;
+            await _ctx.Comments.AddAsync(input);
+            await _ctx.SaveChangesAsync();
+            return Created("", input);
         }
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult ResetDB()
+        public ActionResult<Comment> GetComment(int id)
         {
+            var comment = _ctx.Comments.FirstOrDefault(x=>x.Id == id);
+            if (comment != null) 
+            {
+                return comment;
+            }
+            else
+            {
+                return StatusCode(404);
+            }
+
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<Comment>> OnGet(double minLon, double maxLon, double minLat, double maxLat)
+        {
+            var pos = _ctx.Comments.Where(
+                x => x.latitude >= minLat
+                     && x.latitude <= maxLat
+                     && x.longitude >= minLon
+                     && x.longitude <= maxLat).ToList();
+            return Ok(pos);
+
             
-            return Ok("rar");
         }
 
     }
