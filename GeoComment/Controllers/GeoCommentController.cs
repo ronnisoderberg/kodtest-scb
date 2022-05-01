@@ -43,16 +43,24 @@ namespace testforwether.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Comment>> OnGet(double minLon, double maxLon, double minLat, double maxLat)
+        public ActionResult<IEnumerable<Comment>> OnGet(double? minLon, double? maxLon, double? minLat, double? maxLat)
         {
-            var pos = _ctx.Comments.Where(
-                x => x.latitude >= minLat
-                     && x.latitude <= maxLat
-                     && x.longitude >= minLon
-                     && x.longitude <= maxLat).ToList();
-            return Ok(pos);
 
-            
+            if (maxLat != null && minLat != null && maxLon != null && minLon != null)
+            {
+                var pos = _ctx.Comments.Where(
+                    x => x.latitude >= minLat
+                         && x.latitude <= maxLat
+                         && x.longitude >= minLon
+                         && x.longitude <= maxLat).ToList();
+                return Ok(pos);
+            }
+
+            return StatusCode(400);
+
+
+
+
         }
 
     }
