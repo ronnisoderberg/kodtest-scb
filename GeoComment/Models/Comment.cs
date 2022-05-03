@@ -1,6 +1,6 @@
 ﻿namespace GeoComment.Models
 {
-    public class Comment
+    public class Comment 
     {
         public string author { get; set; }
         public int Id { get; set; }

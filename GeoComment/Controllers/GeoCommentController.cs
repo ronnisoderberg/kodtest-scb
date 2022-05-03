@@ -8,6 +8,7 @@ namespace testforwether.Controllers
 {
     [ApiController]
     [Route("api/geo-comments")]
+    [ApiVersion("0.1")]
     public class GeoCommentController : ControllerBase
     {
         private readonly ApplicationDbContext _ctx;
@@ -18,7 +19,7 @@ namespace testforwether.Controllers
 
 
         [HttpPost]
-       
+
         public async Task<ActionResult> OnPost(Comment input)
         {
             await _ctx.Comments.AddAsync(input);

@@ -5,7 +5,6 @@ namespace GeoComment.Controllers
 {
     [Route("test")]
     [ApiController]
-
     public class ResetController : ControllerBase
     {
 
@@ -17,6 +16,7 @@ namespace GeoComment.Controllers
         }
         
         [Route("reset-db")]
+    [ApiVersion("0.2")]
         [HttpGet]
         public async Task<OkResult> ResetDB()
         {
