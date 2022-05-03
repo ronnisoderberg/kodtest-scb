@@ -20,7 +20,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 
 builder.Services.AddApiVersioning(options =>
 {
-    options.AssumeDefaultVersionWhenUnspecified = true;
+    //options.AssumeDefaultVersionWhenUnspecified = true;
     options.DefaultApiVersion = new ApiVersion(0, 2);
 });
 builder.Services.AddVersionedApiExplorer(options =>

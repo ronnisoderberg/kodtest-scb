@@ -1,23 +1,25 @@
-using GeoComment;
-using GeoComment.Data;
+﻿using GeoComment.Data;
 using GeoComment.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
+
+
+
 
 namespace GeoComment.Controllers
-
 {
     [ApiController]
     [Route("api/geo-comments")]
-    [ApiVersion("0.1")]
-    public class GeoCommentController : ControllerBase
+
+
+    public class GeoCommentControllerv02 : ControllerBase
     {
         private readonly ApplicationDbContext _ctx;
-        public GeoCommentController(ApplicationDbContext ctx)
+
+        public GeoCommentControllerv02(ApplicationDbContext ctx)
         {
             _ctx = ctx;
         }
-
 
         [HttpPost]
 
@@ -32,8 +34,8 @@ namespace GeoComment.Controllers
         [Route("{id}")]
         public ActionResult<Comment> GetComment(int id)
         {
-            var comment = _ctx.Comments.FirstOrDefault(x=>x.Id == id);
-            if (comment != null) 
+            var comment = _ctx.Comments.FirstOrDefault(x => x.Id == id);
+            if (comment != null)
             {
                 return comment;
             }
@@ -43,6 +45,7 @@ namespace GeoComment.Controllers
             }
 
         }
+
 
         [HttpGet]
         public ActionResult<IEnumerable<Comment>> OnGet(double? minLon, double? maxLon, double? minLat, double? maxLat)
@@ -59,11 +62,6 @@ namespace GeoComment.Controllers
             }
 
             return StatusCode(400);
-
-
-
-
         }
-
     }
 }
