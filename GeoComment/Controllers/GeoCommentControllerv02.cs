@@ -10,6 +10,7 @@ namespace GeoComment.Controllers
 {
     [ApiController]
     [Route("api/geo-comments")]
+  
 
 
     public class GeoCommentControllerv02 : ControllerBase
@@ -21,8 +22,10 @@ namespace GeoComment.Controllers
             _ctx = ctx;
         }
 
-        [HttpPost]
 
+
+        [HttpPost]
+        [ApiVersion("0.2")]
         public async Task<ActionResult> OnPost(Comment input)
         {
             await _ctx.Comments.AddAsync(input);
@@ -30,14 +33,26 @@ namespace GeoComment.Controllers
             return Created("", input);
         }
 
+
+
         [HttpGet]
         [Route("{id}")]
+      
         public ActionResult<Comment> GetComment(int id)
         {
             var comment = _ctx.Comments.FirstOrDefault(x => x.Id == id);
             if (comment != null)
             {
-                return comment;
+                var tempComment = new Comment()
+                {
+                    Id = id,
+                    author = comment.author,
+                    message = comment.message,
+                    latitude = comment.latitude,
+                    longitude = comment.longitude,
+                };
+                return tempComment;
+
             }
             else
             {

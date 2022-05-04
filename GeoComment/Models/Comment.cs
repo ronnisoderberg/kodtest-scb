@@ -7,6 +7,6 @@
 
         public double longitude { get; set; }
         public double latitude { get; set; }
-        public string message { get; set; } 
+        public string message { get; set; }
     }
 }
