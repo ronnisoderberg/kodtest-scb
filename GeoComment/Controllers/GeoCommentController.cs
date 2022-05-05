@@ -18,6 +18,7 @@ namespace GeoComment.Controllers
             _ctx = ctx;
         }
 
+        [ApiVersion("0.1")]
 
         [HttpPost]
 

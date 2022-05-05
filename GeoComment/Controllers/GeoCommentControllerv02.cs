@@ -1,5 +1,6 @@
 ﻿using GeoComment.Data;
 using GeoComment.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -10,56 +11,48 @@ namespace GeoComment.Controllers
 {
     [ApiController]
     [Route("api/geo-comments")]
-  
+
 
 
     public class GeoCommentControllerv02 : ControllerBase
     {
         private readonly ApplicationDbContext _ctx;
+        private readonly object _userManager;
 
         public GeoCommentControllerv02(ApplicationDbContext ctx)
         {
             _ctx = ctx;
+            //_userManager = userManager;
         }
 
 
 
+        //[HttpPost]
+        //[ApiVersion("0.2")]
+        //public async Task<ActionResult> OnPost(Comment input)
+        //{
+        //    await _ctx.Comments.AddAsync(input);
+        //    await _ctx.SaveChangesAsync();
+        //    return Created("", input);
+        //}
         [HttpPost]
-        [ApiVersion("0.2")]
-        public async Task<ActionResult> OnPost(Comment input)
+        [Route("{id:int}")]
+        public ActionResult<Comment> PostComment(Comment input)
         {
-            await _ctx.Comments.AddAsync(input);
-            await _ctx.SaveChangesAsync();
-            return Created("", input);
+
+            var newComment = new Comment
+            {
+
+            };
+            
+
+            _ctx.Comments.Add(newComment);
+            _ctx.SaveChanges();
+            return Created("", newComment);
+
         }
 
 
-
-        [HttpGet]
-        [Route("{id}")]
-      
-        public ActionResult<Comment> GetComment(int id)
-        {
-            var comment = _ctx.Comments.FirstOrDefault(x => x.Id == id);
-            if (comment != null)
-            {
-                var tempComment = new Comment()
-                {
-                    Id = id,
-                    author = comment.author,
-                    message = comment.message,
-                    latitude = comment.latitude,
-                    longitude = comment.longitude,
-                };
-                return tempComment;
-
-            }
-            else
-            {
-                return StatusCode(404);
-            }
-
-        }
 
 
         [HttpGet]
@@ -80,3 +73,4 @@ namespace GeoComment.Controllers
         }
     }
 }
+

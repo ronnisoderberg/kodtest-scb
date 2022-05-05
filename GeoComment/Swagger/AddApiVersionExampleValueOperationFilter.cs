@@ -8,7 +8,7 @@ namespace TodoList.Swagger
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            var versionParameterName = "v";
+            var versionParameterName = "api-version";
 
             var parameter = operation
                 .Parameters
