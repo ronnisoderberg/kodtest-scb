@@ -1,8 +1,9 @@
 ﻿using GeoComment.Data;
 using GeoComment.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
 
 
 
@@ -17,12 +18,12 @@ namespace GeoComment.Controllers
     public class GeoCommentControllerv02 : ControllerBase
     {
         private readonly ApplicationDbContext _ctx;
-        private readonly object _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public GeoCommentControllerv02(ApplicationDbContext ctx)
+        public GeoCommentControllerv02(ApplicationDbContext ctx, UserManager<User> userManager)
         {
             _ctx = ctx;
-            //_userManager = userManager;
+            _userManager = userManager;
         }
 
 
@@ -36,22 +37,50 @@ namespace GeoComment.Controllers
         //    return Created("", input);
         //}
         [HttpPost]
-        [Route("{id:int}")]
-        public ActionResult<Comment> PostComment(Comment input)
-        {
+        [ApiVersion("0.2")]
+        [Authorize]
 
-            var newComment = new Comment
+        public async Task<ActionResult<CommentV2>> PostComment(CommentV2 input)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+
+            var newComment = new CommentV2
             {
 
-            };
-            
+                Id = input.Id,
+                body = new Body
+                {
+                    title = input.body.title,
+                    message = input.body.message
+                },
+                longitude = input.longitude,
+                latitude = input.latitude,
 
-            _ctx.Comments.Add(newComment);
-            _ctx.SaveChanges();
+            };
+
+
+
+
             return Created("", newComment);
 
         }
 
+
+
+        public class CommentV2
+        {
+            public int Id { get; set; }
+            public Body body { get; set; }
+            public int longitude { get; set; }
+            public int latitude { get; set; }
+        }
+
+        public class Body
+        {
+            public string title { get; set; }
+            public string message { get; set; }
+        }
 
 
 
