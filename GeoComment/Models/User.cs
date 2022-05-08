@@ -4,6 +4,7 @@ namespace GeoComment.Models
 {
     public class User : IdentityUser
     {
-        public ICollection<Comment> Comments{ get; set; }
+        public List<Comment> Comments { get; set; }
+      
     }
 }
