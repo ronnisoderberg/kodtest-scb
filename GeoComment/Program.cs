@@ -1,4 +1,7 @@
+using GeoComment;
 using GeoComment.Data;
+using GeoComment.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +22,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(
         builder.Configuration.GetConnectionString("default")));
 
 
+builder.Services.AddIdentityCore<User>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+builder.Services.AddAuthentication("BasicAuthentication")
+    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
 builder.Services.AddApiVersioning(options =>
 {
     options.DefaultApiVersion = new ApiVersion(0, 2);
@@ -34,11 +44,11 @@ builder.Services.AddVersionedApiExplorer(options =>
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v0.1", new OpenApiInfo {Title = "versioning", Version = "0.1"});
-    options.SwaggerDoc("v0.2", new OpenApiInfo {Title = "versioning", Version = "0.2"});
+    options.SwaggerDoc("v0.1", new OpenApiInfo { Title = "versioning", Version = "0.1" });
+    options.SwaggerDoc("v0.2", new OpenApiInfo { Title = "versioning", Version = "0.2" });
     options.OperationFilter<AddApiVersionExampleValueOperationFilter>();
 
-} );
+});
 
 
 var app = builder.Build();
@@ -56,6 +66,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
