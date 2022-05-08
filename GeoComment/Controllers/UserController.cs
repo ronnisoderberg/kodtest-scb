@@ -28,8 +28,8 @@ namespace GeoComment.Controllers
             public String Password { get; set; }
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> RegUser();
+        [HttpPost]
+        public async Task<IActionResult> RegUser()
 
     }
 }
