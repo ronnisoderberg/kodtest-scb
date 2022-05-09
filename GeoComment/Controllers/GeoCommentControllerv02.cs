@@ -28,29 +28,33 @@ namespace GeoComment.Controllers
 
 
 
-        //[HttpPost]
-        //[ApiVersion("0.2")]
-        //public async Task<ActionResult> OnPost(Comment input)
-        //{
-        //    await _ctx.Comments.AddAsync(input);
-        //    await _ctx.SaveChangesAsync();
-        //    return Created("", input);
-        //}
+        
         [HttpPost]
         [ApiVersion("0.2")]
         [Authorize]
 
         public async Task<ActionResult<CommentV2>> PostComment(CommentV2 input)
         {
-            var user = await _userManager.GetUserAsync(User);
+            input.body.author = _userManager.GetUserName(User);
+            var oldComment = new Comment()
+            {
+                Id = input.Id,
+                message = input.body.message,
+                author = input.body.author,
+                latitude = input.latitude,
+                longitude = input.longitude,
 
+            };
+            _ctx.Comments.Add(oldComment);
+            _ctx.SaveChanges();
 
             var newComment = new CommentV2
             {
 
-                Id = input.Id,
+                Id = oldComment.Id,
                 body = new Body
                 {
+                    author = input.body.author,
                     title = input.body.title,
                     message = input.body.message
                 },
@@ -72,14 +76,17 @@ namespace GeoComment.Controllers
         {
             public int Id { get; set; }
             public Body body { get; set; }
+
             public int longitude { get; set; }
             public int latitude { get; set; }
         }
 
         public class Body
         {
+            public string? author { get; set; }
             public string title { get; set; }
             public string message { get; set; }
+
         }
 
 
