@@ -43,6 +43,8 @@ namespace GeoComment.Controllers
                 author = input.body.author,
                 latitude = input.latitude,
                 longitude = input.longitude,
+                titel = input.body.title
+
 
             };
             _ctx.Comments.Add(oldComment);
@@ -62,7 +64,7 @@ namespace GeoComment.Controllers
                 latitude = input.latitude,
 
             };
-
+          
 
 
 
@@ -89,24 +91,55 @@ namespace GeoComment.Controllers
 
         }
 
-
-
+        [ApiVersion("0.2")]
         [HttpGet]
-        public ActionResult<IEnumerable<Comment>> OnGet(double? minLon, double? maxLon, double? minLat, double? maxLat)
+        [Route("{id}")]
+
+        public async Task<ActionResult<CommentV2>>GetCommentFromUser(int Id)
         {
 
-            if (maxLat != null && minLat != null && maxLon != null && minLon != null)
+
+            var commentFromUser = _ctx.Comments.FirstOrDefault(x => x.Id == Id);
+            if (commentFromUser == null)
             {
-                var pos = _ctx.Comments.Where(
-                    x => x.latitude >= minLat
-                         && x.latitude <= maxLat
-                         && x.longitude >= minLon
-                         && x.longitude <= maxLat).ToList();
-                return Ok(pos);
+                return  NotFound();
             }
 
-            return StatusCode(400);
+            var newComment = new CommentV2()
+            {
+
+                Id = commentFromUser.Id,
+                body = new Body
+                {
+                    author = commentFromUser.author,
+                    title = commentFromUser.titel,
+                    message = commentFromUser.message,
+                },
+                longitude = commentFromUser.longitude,
+                latitude = commentFromUser.latitude,
+
+            };
+
+            return Ok(newComment);
+
         }
+
+        //[HttpGet]
+        //public ActionResult<IEnumerable<Comment>> OnGet(double? minLon, double? maxLon, double? minLat, double? maxLat)
+        //{
+
+        //    if (maxLat != null && minLat != null && maxLon != null && minLon != null)
+        //    {
+        //        var pos = _ctx.Comments.Where(
+        //            x => x.latitude >= minLat
+        //                 && x.latitude <= maxLat
+        //                 && x.longitude >= minLon
+        //                 && x.longitude <= maxLat).ToList();
+        //        return Ok(pos);
+        //    }
+
+        //    return StatusCode(400);
+        //}
     }
 }
 

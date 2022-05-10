@@ -7,9 +7,10 @@ namespace GeoComment.Models
         public string? author { get; set; }
         public int Id { get; set; }
 
-        public double longitude { get; set; }
-        public double latitude { get; set; }
-        public string message { get; set; }
+        public int longitude { get; set; }
+        public int latitude { get; set; }
+        public string? message { get; set; }
+        public string? titel { get; set; }
         
 
 
