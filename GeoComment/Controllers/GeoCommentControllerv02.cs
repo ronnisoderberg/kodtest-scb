@@ -65,35 +65,17 @@ namespace GeoComment.Controllers
 
             };
           
-
-
-
             return Created("", newComment);
 
         }
 
 
 
-        public class CommentV2
-        {
-            public int Id { get; set; }
-            public Body body { get; set; }
-
-            public int longitude { get; set; }
-            public int latitude { get; set; }
-        }
-
-        public class Body
-        {
-            public string? author { get; set; }
-            public string title { get; set; }
-            public string message { get; set; }
-
-        }
+       
 
         [ApiVersion("0.2")]
         [HttpGet]
-        [Route("{id}")]
+        [Route("{id:int}")]
 
         public async Task<ActionResult<CommentV2>>GetCommentFromUser(int Id)
         {
@@ -124,22 +106,86 @@ namespace GeoComment.Controllers
 
         }
 
-        //[HttpGet]
-        //public ActionResult<IEnumerable<Comment>> OnGet(double? minLon, double? maxLon, double? minLat, double? maxLat)
-        //{
+        [ApiVersion("0.2")]
+        [HttpGet]
+        [Route("{username}")]
 
-        //    if (maxLat != null && minLat != null && maxLon != null && minLon != null)
-        //    {
-        //        var pos = _ctx.Comments.Where(
-        //            x => x.latitude >= minLat
-        //                 && x.latitude <= maxLat
-        //                 && x.longitude >= minLon
-        //                 && x.longitude <= maxLat).ToList();
-        //        return Ok(pos);
-        //    }
+        public async Task<ActionResult> GetCommentsFromUser(string username)
+        {
+            var usersComments = await _ctx.Comments.Where(x => x.author == username).ToArrayAsync();
 
-        //    return StatusCode(400);
-        //}
+            if (usersComments.Length == 0)
+                return NotFound();
+            
+                
+            
+            
+            List<CommentV2> comments = new List<CommentV2>();
+            
+
+            foreach (var user in usersComments)
+                comments.Add(new CommentV2()
+                {
+                    Id = user.Id,
+                    body = new Body()
+                    {
+                        author = username,
+                        title = user.titel,
+                        message = user.message
+                    },
+                    longitude = user.longitude,
+                    latitude = user.latitude,
+                });
+
+            return Ok(comments);
+        }
+
+        [ApiVersion("0.2")]
+        [HttpGet]
+        public ActionResult<IEnumerable<Comment>> OnGet(double? minLon, double? maxLon, double? minLat, double? maxLat)
+        {
+
+            if (maxLat != null && minLat != null && maxLon != null && minLon != null)
+            {
+
+                var positionsComments = _ctx.Comments.Where(
+                    x => x.latitude >= minLat
+                         && x.latitude <= maxLat
+                         && x.longitude >= minLon
+                         && x.longitude <= maxLat).ToList();
+
+
+
+                List<CommentV2> comments = new List<CommentV2>();
+
+
+                foreach (var user in positionsComments)
+                    comments.Add(new CommentV2()
+                    {
+                        Id = user.Id,
+                        body = new Body()
+                        {
+                            author = user.author,
+                            title = user.titel,
+                            message = user.message
+                        },
+                        longitude = user.longitude,
+                        latitude = user.latitude,
+                    });
+
+
+
+
+
+                return Ok(comments);
+            }
+
+            return StatusCode(400);
+
+
+
+
+        }
     }
 }
 
