@@ -1,6 +1,5 @@
-using GeoComment;
-using GeoComment.Data;
-using GeoComment.Models;
+using ScbReact;
+using ScbReact.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -13,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -21,13 +21,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(
         builder.Configuration.GetConnectionString("default")));
 
+////TODO Fixa till så att adden görs på rätt ställe typ :D
+//builder.Services.AddIdentityCore<User>()
+//    .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddIdentityCore<User>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
 
-
-builder.Services.AddAuthentication("BasicAuthentication")
-    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
 builder.Services.AddApiVersioning(options =>
 {
@@ -42,6 +40,7 @@ builder.Services.AddVersionedApiExplorer(options =>
     options.GroupNameFormat = "'v'VVV";
 });
 
+//TODO behövs en swagger?
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v0.1", new OpenApiInfo { Title = "versioning", Version = "0.1" });

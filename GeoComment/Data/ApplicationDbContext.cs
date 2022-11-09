@@ -1,7 +1,6 @@
-﻿using GeoComment.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace GeoComment.Data
+namespace ScbReact.Data
 {
     public class ApplicationDbContext : DbContext
     {
@@ -11,8 +10,8 @@ namespace GeoComment.Data
             
         }
 
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<User> Users { get; set; }  
+        //public DbSet<Comment> Comments { get; set; }
+        //public DbSet<User> Users { get; set; }  
 
     }
 }

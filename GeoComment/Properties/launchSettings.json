@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "GeoComment": {
+    "ScbReact": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
