@@ -1,9 +1,6 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\GeoComment",
-    "\\GeoComment\\Models"
+    ""
   ],
-  "SelectedNode": "\\GeoComment\\Models\\Comment.cs",
   "PreviewInSolutionExplorer": false
 }
